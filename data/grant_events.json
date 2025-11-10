@@ -1,0 +1,77 @@
+[
+  {
+    "event_id": "e_001",
+    "title": "Women in Education Grants 2025",
+    "source": "Eventbrite",
+    "start_date": "2025-12-15T10:00:00Z",
+    "location": "Online",
+    "description": "A grant program supporting organizations that empower girls and women through education and vocational training.",
+    "tags": ["education", "women_empowerment"],
+    "organizer": "Global Education Trust",
+    "metadata": {
+      "amount_range": "$10,000 - $50,000",
+      "application_deadline": "2025-12-31",
+      "funding_type": "Grant"
+    }
+  },
+  {
+    "event_id": "e_002",
+    "title": "Green Futures Initiative 2025",
+    "source": "Eventbrite",
+    "start_date": "2025-12-10T09:30:00Z",
+    "location": "Pune, IN",
+    "description": "Funding opportunity for NGOs and startups developing sustainable energy and environmental conservation solutions.",
+    "tags": ["climate_action", "sustainability", "renewable_energy"],
+    "organizer": "EcoVenture Foundation",
+    "metadata": {
+      "amount_range": "$5,000 - $40,000",
+      "application_deadline": "2025-12-25",
+      "funding_type": "Grant"
+    }
+  },
+  {
+    "event_id": "e_003",
+    "title": "Community Health Accelerator 2025",
+    "source": "Eventbrite",
+    "start_date": "2025-12-20T08:00:00Z",
+    "location": "Mumbai, IN",
+    "description": "A hybrid grant and mentorship program for public health initiatives improving access to healthcare in underserved communities.",
+    "tags": ["public_health", "community_outreach"],
+    "organizer": "Health4Change",
+    "metadata": {
+      "amount_range": "$15,000 - $100,000",
+      "application_deadline": "2026-01-10",
+      "funding_type": "Grant + Mentorship"
+    }
+  },
+  {
+    "event_id": "e_004",
+    "title": "AgriTech Innovation Challenge",
+    "source": "Eventbrite",
+    "start_date": "2025-12-05T09:00:00Z",
+    "location": "Bengaluru, IN",
+    "description": "Grants for startups using technology to improve productivity and sustainability in agriculture and rural development.",
+    "tags": ["agriculture", "rural_development", "technology"],
+    "organizer": "Tech4Rural Foundation",
+    "metadata": {
+      "amount_range": "$8,000 - $60,000",
+      "application_deadline": "2025-12-22",
+      "funding_type": "Innovation Grant"
+    }
+  },
+  {
+    "event_id": "e_005",
+    "title": "Mental Health Awareness Grants",
+    "source": "Eventbrite",
+    "start_date": "2025-12-18T11:00:00Z",
+    "location": "Ahmedabad, IN",
+    "description": "Funding opportunity for campaigns raising awareness and improving mental health access in local communities.",
+    "tags": ["mental_health", "community_welfare"],
+    "organizer": "MindCare Foundation",
+    "metadata": {
+      "amount_range": "$7,500 - $45,000",
+      "application_deadline": "2025-12-29",
+      "funding_type": "Community Grant"
+    }
+  }
+]
