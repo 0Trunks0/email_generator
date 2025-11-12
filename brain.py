@@ -125,16 +125,22 @@ class GroqEmailGenerator:
             return self._fallback_email(recipient, event, day_number, f"API error: {e}")
     
     def _fallback_email(self, recipient: Dict, event: Dict, day_number: str, error: str) -> Dict:
-        """Fallback to deterministic email if API fails"""
+        """Fallback to deterministic, day-specific email using Russell Brunson framework"""
+        email_config = EMAIL_TYPES.get(day_number, EMAIL_TYPES.get(int(day_number) if day_number.isdigit() else None, {}))
+        
+        subject = self._generate_subject(recipient, event, day_number, email_config)
+        body = self._generate_body_by_day(recipient, event, day_number, email_config)
+        
         return {
             "internal_reasoning": {
-                "email_type": "Fallback",
+                "email_type": email_config.get("type", "Custom"),
                 "error": error,
-                "match_decision": "send"
+                "match_decision": "send",
+                "principle": email_config.get("principle", "Personalized outreach")
             },
             "email": {
-                "subject": f"{event.get('title')} - Opportunity for {recipient.get('organization')}",
-                "body": self._generate_simple_body(recipient, event, day_number)
+                "subject": subject,
+                "body": body
             },
             "verification": {
                 "all_data_from_json": True,
@@ -143,22 +149,210 @@ class GroqEmailGenerator:
             "warnings": [f"Used fallback due to: {error}"]
         }
     
-    def _generate_simple_body(self, recipient: Dict, event: Dict, day_number: str) -> str:
-        """Simple deterministic body for fallback"""
+    def _generate_subject(self, recipient: Dict, event: Dict, day_number: str, email_config: Dict) -> str:
+        """Generate day-specific subject line"""
+        name = recipient.get("name", "")
+        org = recipient.get("organization", "")
+        title = event.get("title", "")
+        topics = recipient.get("topics", [])
+        
+        day_subjects = {
+            "0": f"You're in! Here's what to expect - {title}",
+            "1": f"The #1 mistake that kills 97% of {topics[0].replace('_', ' ').title()} applications",
+            "3": f"Proof: Real organizations getting real grant money - {title}",
+            "5": f"I get it... you're skeptical (but read this about {title})",
+            "6": f"⏰ Tomorrow: Your {topics[0].replace('_', ' ').title()} funding breakthrough",
+            "7a": f"🔴 Going LIVE in 6 hours - {title}",
+            "7b": f"⏰ Starting in 60 minutes (join now)"
+        }
+        
+        return day_subjects.get(str(day_number), f"{title} - Opportunity for {org}")
+    
+    def _generate_body_by_day(self, recipient: Dict, event: Dict, day_number: str, email_config: Dict) -> str:
+        """Generate day-specific email body using Russell Brunson framework"""
         name = recipient.get("name", "there")
+        org = recipient.get("organization", "your organization")
         title = event.get("title", "this opportunity")
         organizer = event.get("organizer", "the organizer")
-        amount = event.get("metadata", {}).get("amount_range", "[amount]")
-        deadline = event.get("metadata", {}).get("application_deadline", "[deadline]")
+        amount = event.get("metadata", {}).get("amount_range", "grants available")
+        deadline = event.get("metadata", {}).get("application_deadline", "the deadline")
+        topics = recipient.get("topics", ["funding"])
+        topic_str = topics[0].replace("_", " ").title()
         
-        return f"""Hi {name},
+        day_number = str(day_number)
+        
+        if day_number == "0":
+            # Registration Confirmation
+            return f"""Hi {name},
+
+You're officially in! 🎉
+
+I'm excited to welcome you to {title}, happening with {organizer}.
+
+Here's what you can expect:
+• A deep dive into {topic_str.lower()} funding opportunities
+• Real grant amounts: {amount}
+• Application deadline: {deadline}
+• Expert insights and strategies to succeed
+
+Mark your calendar and get ready to take your {org}'s funding efforts to the next level.
+
+More details coming your way tomorrow!
+
+Best regards,
+
+Priya Singh
+Grants Coordinator
+Funding Forward"""
+
+        elif day_number == "1":
+            # Indoctrination - The Big Problem
+            return f"""Hi {name},
+
+In my work with {org}-like organizations, I see the same pattern over and over.
+
+The #1 mistake that kills 97% of {topic_str.lower()} applications isn't lack of merit. It's not even lack of funding sources.
+
+It's applying to opportunities without understanding what funders actually want to see.
+
+Most organizations scramble at the last minute, missing the nuances that make their application stand out. They don't realize that {title} — happening soon — is specifically designed to teach exactly this.
+
+That's why I wanted to personally reach out.
+
+{title} is happening with {organizer}, and they're revealing insider strategies funders use to evaluate applications. Grant amounts: {amount}. Application deadline: {deadline}.
+
+This could be the turning point for your next funding cycle.
+
+Mark your calendar. More details tomorrow.
+
+Best regards,
+
+Priya Singh
+Grants Coordinator
+Funding Forward"""
+
+        elif day_number == "3":
+            # Social Proof
+            return f"""Hi {name},
+
+Proof: Real organizations getting real grant money.
+
+{organizer} has been supporting {topic_str.lower()} initiatives like {org} for years. The numbers speak for themselves: organizations in your space have secured grants ranging from {amount}.
+
+Why? Because they understand what funders look for.
+
+{title} is where that knowledge is shared, and where the next batch of successful applicants get their edge.
+
+Application deadline: {deadline}
+
+Your organization could be next.
+
+Best regards,
+
+Priya Singh
+Grants Coordinator
+Funding Forward"""
+
+        elif day_number == "5":
+            # Objection Handling
+            return f"""Hi {name},
+
+I get it. You're probably thinking: "Another funding opportunity... is it really worth our time?"
+
+Fair question. Here's the honest answer:
+
+Most {topic_str.lower()} funding programs are generic. But {title}? It's different. {organizer} specifically designed this for organizations like {org}.
+
+Common objection: "We don't have time." Reality: The insights from {title} will save you weeks on future applications.
+
+Common objection: "We're not competitive enough." Reality: Grant amounts of {amount} go to organizations that know how to present their work. That's taught here.
+
+Application deadline: {deadline}
+
+The real question isn't whether you have time. It's whether you can afford not to attend.
+
+Best regards,
+
+Priya Singh
+Grants Coordinator
+Funding Forward"""
+
+        elif day_number == "6":
+            # Final Push - Tomorrow
+            return f"""Hi {name},
+
+Tomorrow is the day.
+
+{title} goes live tomorrow, and I wanted to make sure you're ready.
+
+Here's what to prepare:
+✅ Your project details and impact metrics
+✅ Questions about the application process
+✅ A notepad — you'll want to capture the strategies shared
+
+Grants up to {amount}. Application deadline: {deadline}.
+
+This is happening tomorrow with {organizer}.
+
+Set a reminder right now. This could be the breakthrough {org} has been waiting for.
+
+Best regards,
+
+Priya Singh
+Grants Coordinator
+Funding Forward
+
+P.S. – Tomorrow morning, you'll get one final reminder with exact timing and access details. Don't miss it."""
+
+        elif day_number == "7a":
+            # Morning Reminder - Event Day
+            return f"""Hi {name},
+
+🔴 Going LIVE in 6 hours - {title}
+
+{organizer} is about to share insider strategies for securing {amount} in grants.
+
+Have ready:
+✅ Your laptop/phone and a quiet space
+✅ Your organization's current funding challenges
+✅ A notebook for notes
+
+Application deadline: {deadline}
+
+See you in 6 hours!
+
+Best regards,
+
+Priya Singh
+Grants Coordinator
+Funding Forward"""
+
+        elif day_number == "7b":
+            # Final Warning - Last Hour
+            return f"""Hi {name},
+
+⏰ Starting in 60 minutes!
+
+{title} is about to start. {organizer} is revealing exactly how to get grants up to {amount}.
+
+Application deadline: {deadline}
+
+Join now. This is it.
+
+Priya Singh
+Grants Coordinator
+Funding Forward"""
+
+        else:
+            # Generic fallback for unknown days
+            return f"""Hi {name},
 
 I wanted to share {title} organised by {organizer}.
 
 Grant amount: {amount}
 Application deadline: {deadline}
 
-This may be relevant for your work at {recipient.get('organization', 'your organization')}.
+This may be relevant for your work at {org}.
 
 Best regards,
 
